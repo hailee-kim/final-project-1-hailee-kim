@@ -1,0 +1,98 @@
+---
+title: "Progress Memo 1"
+subtitle: |
+  | Final Project 
+  | Data Science 1 with R (STAT 301-1)
+author: "Hailee Kim"
+pagetitle: "PM1 Hailee Kim"
+date: today 
+
+format:
+  html:
+    toc: true
+    toc-depth: 4
+    toc-location: left
+    embed-resources: true
+    link-external-newwindow: true
+
+execute:
+  warning: false
+
+from: markdown+emoji
+reference-location: margin
+citation-location: margin
+---
+
+::: {.callout-tip icon=false}
+
+## Github Repo Link
+
+[Hailee's Memo 1 Github Repo](https://github.com/stat301-1-2024-fall/final-project-1-hailee-kim)
+
+:::
+
+
+## Data source
+
+The dataset was sourced from Maven Analytics, a reputable provider of data training and datasets. The datasets were freely available on a resource page titled "Data Playground."^[https://www.mavenanalytics.io/data-playground, accessed on November 3rd, 2024] This dataset includes all the necessary information for conducting exploratory data analysis, eliminating the need for merging additional datasets.
+
+## Why this data
+
+I selected the Airbnb dataset inspired by my upcoming Thanksgiving trip to Joshua Tree National Park, where I plan to use Airbnb for accommodations. My recent travels across North America and Canada using Airbnb have not only familiarized me with its system but also piqued my interest in the underlying dynamics of the service. I aim to explore which attributes such as location, amenities, property type, cleanliness, and host communication have the biggest influence in price, any major differences in the Airbnb market between cities, and determine whether being a superhost correlates with higher customer satisfaction.
+
+## Data quality & complexity check
+
+### Observations and Variables
+
+The dataset contains 279,712 observations across 33 variables, including 1 date, 9 categorical (originally character but converted to factors), 4 logical, and 19 numeric variables, as shown in @tbl-1. 
+
+```{r}
+#| echo: false 
+
+library(tidyverse)
+
+listings <- read_csv("data/listings.csv") |> 
+  mutate(across(where(is.character), as.factor))
+listings_codebook <- read_csv("data/listings_data_dictionary.csv")
+```
+
+```{r}
+#| label: tbl-1
+#| tbl-cap: "Summary Table of Variable Types"
+#| echo: false 
+
+table(sapply(listings, class)) |>
+  knitr::kable()
+```
+
+### Missingness
+
+@tbl-2 provides a summary of missingness across variables, highlighting those with less than 80% completeness that require closer examination. These variables include district, host_response_time, host_response_rate, host_acceptance_rate, review_scores_value, review_scores_location, review_scores_checkin, review_scores_accuracy, review_scores_communication, review_scores_cleanliness, and review_scores_rating.
+
+
+```{r}
+#| label: tbl-2
+#| tbl-cap: "All Variables with Missing Values"
+#| echo: false 
+
+skimr::skim_without_charts(listings) |>
+  filter(n_missing != 0) |>
+  arrange(desc(complete_rate)) |>
+  knitr::kable()
+```
+
+
+### Tidiness 
+
+The data is tidy except amenities attribute, since it has a list of amenities such as 
+"["Heating", "Kitchen", "Washer", "Wifi", "Long term stays allowed"]" which is needs to be separated using a comma delimiter.
+
+
+## Potential data issues
+
+Handling missing values will be crucial, as these could bias any analysis related to host performance or property ratings. Additionally, categorical data such as property_type and room_type were initially stored as character strings; these have been converted to categorical variables to facilitate effective grouping and analysis.
+
+## Misc
+
+It would be beneficial to have access to the number of unique reviewers, identified by their reviewer IDs, for each rating. This would allow me to analyze individual reviewer activities and assess the credibility of the ratings more effectively.
+
