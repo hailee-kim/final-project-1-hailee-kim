@@ -57,7 +57,8 @@ The dataset contains 279,712 observations across 33 variables, including 1 date,
 The data is tidy except amenities attribute, since it has a list of amenities such as 
 "["Heating", "Kitchen", "Washer", "Wifi", "Long term stays allowed"]" which is needs to be separated using a comma delimiter. 
 
-The 
+As a part of the step, we derive several new variables by conducting a text analysis. 
+
 
 ```{r}
 #| echo: false 
@@ -69,9 +70,13 @@ listings <- read_csv("data/raw/listings.csv") |>
 listings_codebook <- read_csv("data/raw/listings_data_dictionary.csv")
 ```
 
-## Explorations
+## Univariate Analysis
 
-### Bivariate Analysis
+Price, Countries
+There were only 6 distict countries that this dataset listings were including.
+
+
+## Bivariate Analysis
 
 ```{r}
 #| label: tbl-3
@@ -98,7 +103,7 @@ listings |>
 @fig-price-distribution plot complements this summary by visually highlighting price disparities and outliers. Cities like Cape Town, Bangkok, and Mexico City show extreme outliers, with maximum prices reaching 300,000 or higher, indicating the presence of high-end luxury properties. These outliers significantly inflate the mean price in these cities, as seen in @tbl-3. On the other hand, cities like Paris, Rome, and New York exhibit compact distributions with fewer visible outliers, reflecting more standardized pricing. Additionally, cities like Rio de Janeiro and Istanbul also show significant variability in prices, but the lower median prices suggest that the majority of listings fall into affordable or mid-range categories.
 
 
-### Multivariate Analysis
+## Multivariate Analysis
 
 
 ```{r}

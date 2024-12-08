@@ -1,0 +1,1 @@
+cities <- unique(listings$city)

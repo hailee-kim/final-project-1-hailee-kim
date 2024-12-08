@@ -8,8 +8,6 @@ all_factors <- c(factors, review_factors)
 listings <- listings |>
   mutate(across(all_factors, as.factor))
 
-str(listings_transformed)
-
 # pivot amenities column
 listings_transformed <- listings |>
   mutate(amenities = str_split(amenities, ",")) |>
