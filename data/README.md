@@ -22,3 +22,6 @@ Brief overview of what you can find in the repo...
 -   'rio_de_janeiro.csv': Airbnb data for 26615 listings in Rio de Janeiro
 -   'rome.csv': Airbnb data for 27647 listings in Rome
 -   'sydney.csv': Airbnb data for 33630 listings in Sydney
+-   'top-3-cities.csv': Airbnb data for Paris, New York, and Sydney
+
+

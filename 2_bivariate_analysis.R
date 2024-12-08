@@ -1,7 +1,7 @@
 ### Bivariate Analysis
 
 # Calculate summary statistics for price within each city
-summary_stats <- listings |>
+top_3_cities |>
   group_by(city) |>
   summarize(
     mean_price = mean(price, na.rm = TRUE),
@@ -10,10 +10,11 @@ summary_stats <- listings |>
     min_price = min(price, na.rm = TRUE),
     max_price = max(price, na.rm = TRUE),
     n = n()
-  ) |> arrange(desc(n))
+  ) |> arrange(desc(n)) |>
+  knitr::kable()
 
-# Visualize price distribution using boxplots or histograms
-listings |> 
+# boxplot of city vs. price 
+top_3_cities |> 
   ggplot(aes(x = city, y = price)) +
   geom_boxplot(outlier.color = "red", fill = "lightblue") +
   labs(title = "Price Distribution by City", x = "City", y = "Price (in Local Currency)") +
@@ -34,31 +35,26 @@ ggsave(
   dpi = 300
 )
 
-cities <- unique(listings$city)
+# histograms of city vs. price 
+## paris
 
-for (city_name in cities) {
-  p <- listings |>
-    filter(city == city_name, price > 0) |>
-    ggplot(aes(x = price)) +
-    geom_histogram(binwidth = 0.1, fill = "blue", color = "white") +
-    scale_x_log10() +
-    labs(
-      title = str_glue("Price Distribution in {city_name}"),
-      x = "Log(Price)",
-      y = "Frequency"
-    ) +
-    theme_minimal()
-  
-  ggsave(
-    filename = str_glue("plots/price-dist-{tolower(gsub(' ', '-', city_name))}.png"),
-    plot = p,
-    width = 8,
-    height = 6,
-    dpi = 300
-  )
-}
+paris |>
+  filter(city == "Paris", price > 0) |>
+  ggplot(aes(x = price)) +
+  geom_histogram(binwidth = 0.1, fill = "navy", color = "white") +
+  scale_x_log10() +
+  labs(title = "Price Distribution in Paris", x = "Log(Price)", y = "Frequency") +
+  theme_minimal()
 
-listings |>
+ggsave(
+  filename = str_glue("plots/price-dist-paris.png"),
+  width = 8,
+  height = 6,
+  dpi = 300
+)
+
+## new york
+new_york |>
   filter(city == "New York", price > 0) |>
   ggplot(aes(x = price)) +
   geom_histogram(binwidth = 0.1, fill = "turquoise", color = "white") +
@@ -66,10 +62,50 @@ listings |>
   labs(title = "Price Distribution in New York", x = "Log(Price)", y = "Frequency") +
   theme_minimal()
 
-listings |>
+ggsave(
+  filename = str_glue("plots/price-dist-new-york.png"),
+  width = 8,
+  height = 6,
+  dpi = 300
+)
+
+## sydney
+sydney |>
   filter(city == "Sydney", price > 0) |>
   ggplot(aes(x = price)) +
   geom_histogram(binwidth = 0.1, fill = "tomato", color = "white") +
   scale_x_log10() +
   labs(title = "Price Distribution in Sydney", x = "Log(Price)", y = "Frequency") +
   theme_minimal()
+
+ggsave(
+  filename = str_glue("plots/price-dist-sydney.png"),
+  width = 8,
+  height = 6,
+  dpi = 300
+)
+
+# combined overlapping histograms
+
+combined_data <- bind_rows(
+  paris |> filter(city == "Paris", price > 0) |> mutate(city_label = "Paris"),
+  new_york |> filter(city == "New York", price > 0) |> mutate(city_label = "New York"),
+  sydney |> filter(city == "Sydney", price > 0) |> mutate(city_label = "Sydney")
+)
+
+combined_data |>
+  ggplot(aes(x = price, fill = city_label)) +
+  geom_histogram(binwidth = 0.1, position = "identity", alpha = 0.5, color = "white") +
+  scale_x_log10() +
+  labs(title = "Overlapping Price Distributions by City", 
+       x = "Log(Price)", 
+       y = "Frequency") +
+  theme_minimal() +
+  scale_fill_manual(values = c("Paris" = "navy", "New York" = "turquoise", "Sydney" = "tomato"))
+
+ggsave(
+  filename = str_glue("plots/price-combined.png"),
+  width = 8,
+  height = 6,
+  dpi = 300
+)

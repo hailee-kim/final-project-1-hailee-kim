@@ -36,10 +36,24 @@ citation-location: margin
 #| echo: false 
 
 library(tidyverse)
+library(purrr)
 
 listings <- read_csv("data/raw/listings.csv") |> 
   mutate(across(where(is.character), as.factor))
 listings_codebook <- read_csv("data/raw/listings_data_dictionary.csv")
+
+bangkok <- read_csv("data/bangkok.csv")
+cape_town <- read_csv("data/cape_town.csv")
+hong_kong <- read_csv("data/hong_kong.csv")
+istanbul <- read_csv("data/istanbul.csv")
+mexico_city <- read_csv("data/mexico_city.csv")
+new_york <- read_csv("data/new_york.csv")
+paris <- read_csv("data/paris.csv")
+rio_de_janeiro <- read_csv("data/rio_de_janeiro.csv")
+rome <- read_csv("data/rome.csv")
+sydney <- read_csv("data/sydney.csv")
+
+top_3_cities <- read_csv("data/top_3_cities.csv")
 ```
 
 ## Introduction
@@ -50,25 +64,11 @@ The dataset was sourced from Maven Analytics, a reputable provider of data train
 
 ## Data Overview & quality
 
-The dataset contains 279,712 observations across 33 variables, including 1 date, 9 categorical (originally character but converted to factors), 4 logical, and 19 numeric variables.
+The dataset contains 279,712 observations across 33 variables, including 1 date, 9 categorical (originally character but converted to factors), 4 logical, and 19 numeric variables. The variables including district, host_response_time, host_response_rate, host_acceptance_rate, and review data require closer examination due to their low completeness and high proportion of missing values.
 
-@tbl-2 provides a summary of missingness across variables, highlighting those with less than 80% completeness that require closer examination. These variables include district, host_response_time, host_response_rate, host_acceptance_rate, review_scores_value, review_scores_location, review_scores_checkin, review_scores_accuracy, review_scores_communication, review_scores_cleanliness, and review_scores_rating.
+The dataset is tidy except for the amenities attribute, which contains a list of amenities, such as ["Heating", "Kitchen", "Washer", "Wifi", "Long term stays allowed"]. To address this, I transformed each amenity into a separate binary column, indicating its presence (1) or absence (0) in each listing.
 
-The data is tidy except amenities attribute, since it has a list of amenities such as 
-"["Heating", "Kitchen", "Washer", "Wifi", "Long term stays allowed"]" which is needs to be separated using a comma delimiter. 
-
-As a part of the step, we derive several new variables by conducting a text analysis. 
-
-
-```{r}
-#| echo: false 
-
-library(tidyverse)
-
-listings <- read_csv("data/raw/listings.csv") |> 
-  mutate(across(where(is.character), as.factor))
-listings_codebook <- read_csv("data/raw/listings_data_dictionary.csv")
-```
+In terms of analysis, I opted to compare prices within the same city to maintain consistency and avoid complications stemming from variations in local currencies. This approach allowed me to conduct meaningful bivariate and multivariate analyses, exploring the relationships between price and variables such as accommodates, bedrooms, and minimum_nights. 
 
 ## Univariate Analysis
 
@@ -79,53 +79,63 @@ There were only 6 distict countries that this dataset listings were including.
 ## Bivariate Analysis
 
 ```{r}
-#| label: tbl-3
+#| label: tbl-1
 #| tbl-cap: "Summary Statistics for Price within Each City"
 #| echo: false 
 
-listings |>
+top_3_cities |>
   group_by(city) |>
-  summarise(
+  summarize(
     mean_price = mean(price, na.rm = TRUE),
     median_price = median(price, na.rm = TRUE),
     sd_price = sd(price, na.rm = TRUE),
     min_price = min(price, na.rm = TRUE),
     max_price = max(price, na.rm = TRUE),
     n = n()
-  ) |>
+  ) |> arrange(desc(n)) |>
   knitr::kable()
 ```
 
-@tbl-3 summarizes mean, median, standard deviation, minimum, and maximum prices for Airbnb listings^[This dataset was sourced from [Maven Analytics](https://www.mavenanalytics.io/data-playground), accessed on November 3rd, 2024.] across ten cities. The mean price varies widely, with cities like Cape Town (2405.12) and Bangkok (2078.28) exhibiting significantly higher averages compared to cities like New York (142.84) and Paris (113.10). However, the large standard deviations in cities such as Cape Town (6143.19) and Bangkok (6379.79) indicate high variability, likely influenced by luxury listings or extreme outliers. Conversely, cities like Paris (214.43) and New York (275.74) display smaller standard deviations, suggesting more consistent pricing across listings. Median prices, which are less sensitive to outliers, highlight that cities like Paris and New York predominantly cater to budget and mid-range accommodations, with median prices at 80 and 99, respectively.
+@tbl-1 summarizes mean, median, standard deviation, minimum, and maximum prices for Airbnb listings^[This dataset was sourced from [Maven Analytics](https://www.mavenanalytics.io/data-playground), accessed on November 3rd, 2024.] across ten cities. The mean price varies widely, with cities like Cape Town (2405.12) and Bangkok (2078.28) exhibiting significantly higher averages compared to cities like New York (142.84) and Paris (113.10). However, the large standard deviations in cities such as Cape Town (6143.19) and Bangkok (6379.79) indicate high variability, likely influenced by luxury listings or extreme outliers. Conversely, cities like Paris (214.43) and New York (275.74) display smaller standard deviations, suggesting more consistent pricing across listings. Median prices, which are less sensitive to outliers, highlight that cities like Paris and New York predominantly cater to budget and mid-range accommodations, with median prices at 80 and 99, respectively.
 
-![Visualization of price distributions across cities, highlighting disparities, variability, and the impact of outliers on pricing trends ](plots/boxplot.png){#fig-price-distribution}
+![Visualization of price distributions across cities, highlighting disparities, variability, and the impact of outliers on pricing trends ](plots/boxplot.png){#fig-boxplot}
 
-@fig-price-distribution plot complements this summary by visually highlighting price disparities and outliers. Cities like Cape Town, Bangkok, and Mexico City show extreme outliers, with maximum prices reaching 300,000 or higher, indicating the presence of high-end luxury properties. These outliers significantly inflate the mean price in these cities, as seen in @tbl-3. On the other hand, cities like Paris, Rome, and New York exhibit compact distributions with fewer visible outliers, reflecting more standardized pricing. Additionally, cities like Rio de Janeiro and Istanbul also show significant variability in prices, but the lower median prices suggest that the majority of listings fall into affordable or mid-range categories.
+@fig-boxplot plot complements this summary by visually highlighting price disparities and outliers. Cities like Cape Town, Bangkok, and Mexico City show extreme outliers, with maximum prices reaching 300,000 or higher, indicating the presence of high-end luxury properties. These outliers significantly inflate the mean price in these cities, as seen in @tbl-1. On the other hand, cities like Paris, Rome, and New York exhibit compact distributions with fewer visible outliers, reflecting more standardized pricing. Additionally, cities like Rio de Janeiro and Istanbul also show significant variability in prices, but the lower median prices suggest that the majority of listings fall into affordable or mid-range categories.
 
+### Paris
+
+![Caption](plots/price-dist-paris.png){#fig-paris}
+
+### New York
+
+![Caption](plots/price-dist-new-york.png){#fig-ny}
+
+### Sydney 
+
+![Caption](plots/price-dist-sydney.png){#fig-sydney}
 
 ## Multivariate Analysis
 
-
 ```{r}
 #| label: tbl-4
-#| tbl-cap: "Correlations Between Price and Selected Variables by City"
+#| tbl-cap: "Correlations Between Price and Selected Variables by Top 3 Cities"
 #| echo: false 
 
-listings |>
+top_3_cities |>
   group_by(city) |>
   summarise(
     cor_accommodates = cor(accommodates, price, use = "complete.obs"),
     cor_bedrooms = cor(bedrooms, price, use = "complete.obs"),
-    cor_minimum_nights = cor(minimum_nights, price, use = "complete.obs")
-  ) |>
-  knitr::kable()
+    cor_minimum_nights = cor(minimum_nights, price, use = "complete.obs"),
+    cor_latitude = cor(latitude, price, use = "complete.obs"),
+    cor_longtitude = cor(longitude, price, use = "complete.obs")
+  )
 ```
 
 @tbl-4 provides a detailed overview of the correlations between price and numerical features such as accommodates, bedrooms, and minimum_nights for each city. Accommodates shows a significant positive correlation with price in cities like Cape Town (0.39) and Sydney (0.37), indicating that listings accommodating more guests generally have higher prices in these cities.
 Bedrooms also demonstrates strong positive correlations with price in Sydney (0.39) and Cape Town (0.36), suggesting that larger properties with more bedrooms command premium pricing in these markets. Minimum_nights exhibits weak correlations with price across all cities, with the highest correlation observed in Sydney (0.03). This suggests that the required minimum stay duration has minimal influence on pricing. Some cities, such as Hong Kong (-0.02) and Rome (-0.005), even show slightly negative correlations for minimum_nights, reinforcing its limited impact on price.
 
-
-![Visual representation of the correlation strength between price and selected variables (accommodates, bedrooms, and minimum nights) across cities](plots/correlation-heatmap.png){#fig-heatmap}
+![Visual representation of the correlation strength between price and selected variables (accommodates, bedrooms, minimum nights, latitude, longitude) across cities](plots/heatmap.png){#fig-heatmap}
 
 Darker shades in the @fig-heatmap signify stronger correlations, such as the relationships between accommodates and bedrooms with price in cities like Sydney and Cape Town, where larger properties consistently command higher prices. Conversely, lighter shades denote weaker correlations, particularly for minimum_nights, which appears to have a negligible influence on pricing across all cities.
 
@@ -138,22 +148,3 @@ Overall, Cape Town and Sydney exhibit the strongest overall correlations between
 2. Multivariate analysis
 * How do various features such as the number of guests accommodated, number of bedrooms, and minimum nights correlate with listing prices? 
 * Which features have the strongest relationship with price, and does this relationship vary by city?
-
-In this stage of the project, I focused on preparing the dataset for analysis by transforming key variables and addressing challenges related to the data structure. First, I converted multiple columns into factors to enable categorical analysis, including variables such as host_response_time, neighbourhood, district, city, property_type, room_type, and review-related metrics (e.g., review_scores_rating, review_scores_accuracy, and others). This transformation ensures that these variables are appropriately handled in subsequent visualizations and statistical analyses. 
-
-In terms of analysis, I opted to compare prices within the same city to maintain consistency and avoid complications stemming from variations in local currencies. This approach allowed me to conduct meaningful bivariate and multivariate analyses, exploring the relationships between price and variables such as accommodates, bedrooms, and minimum_nights. To enhance the visualization of price distributions, I implemented a for loop to generate individual histograms for each city, which allowed me to observe and compare the unique price distributions across various markets effectively.
-
-## Appendix: technical info 
-
-```{r}
-#| label: tbl-2
-#| tbl-cap: "All Variables with Missing Values"
-#| echo: false 
-
-skimr::skim_without_charts(listings) |>
-  filter(n_missing != 0) |>
-  arrange(desc(complete_rate)) |>
-  knitr::kable()
-```
-
-
