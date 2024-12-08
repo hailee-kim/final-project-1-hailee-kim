@@ -50,3 +50,12 @@ rsconnect/
 
 # data ignore
 data/raw/listings.csv
+data/bangkok.csv
+data/cape_town.csv
+data/hong_kong.csv
+data/istanbul.csv
+data/mexico_city.csv
+data/paris.csv
+data/rio_de_janeiro.csv
+data/rome.csv
+data/sydney.csv
