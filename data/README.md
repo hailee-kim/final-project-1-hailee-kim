@@ -1,16 +1,20 @@
-## AirBnb Listings: An EDA
+## Airbnb Listings: An EDA
 
-This repository is for an analysis of data collected on
+This repository is for an analysis of Airbnb data for 250,000+ listings in 10 major cities, including information about hosts, pricing, location, and room type, along with over 5 million historical reviews.
 
 ## What's in the repo
 
 Brief overview of what you can find in the repo...
 
--   "data/": contains all data for this project \* "plots/": contains all figures and plots used in reports and memos
+-   "data/": contains all data for this project
+-   "plots/": contains all figures and plots used in reports and memos
 
 ### R scripts
 
--   
+-   "0a_data_collection.R": scratch paper for data collection work
+-   "0b_data_cleaning.R": scratch paper for data cleaning work
+-   "1_bivariate_analysis.R": scratch paper for bivariate analysis
+-   "2_multivariate_analysis.R": scratch paper for multivariate analysis
 
 ### Reports
 

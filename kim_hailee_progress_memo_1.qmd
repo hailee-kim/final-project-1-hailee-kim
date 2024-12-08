@@ -34,7 +34,7 @@ citation-location: margin
 
 ## Data source
 
-The dataset was sourced from Maven Analytics, a reputable provider of data training and datasets. The datasets were freely available on a resource page titled "Data Playground."^[https://www.mavenanalytics.io/data-playground, accessed on November 3rd, 2024] This dataset includes all the necessary information for conducting exploratory data analysis, eliminating the need for merging additional datasets.
+The dataset was sourced from Maven Analytics, a reputable provider of data training and datasets. The datasets were freely available on a resource page titled "Data Playground."^[This dataset was sourced from [Maven Analytics](https://www.mavenanalytics.io/data-playground), accessed on November 3rd, 2024.] This dataset includes all the necessary information for conducting exploratory data analysis, eliminating the need for merging additional datasets.
 
 ## Why this data
 
