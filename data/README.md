@@ -1,26 +1,24 @@
-## Airbnb Listings: An EDA
+## Datasets
 
-This repository is for an analysis of Airbnb data for 250,000+ listings in 10 major cities, including information about hosts, pricing, location, and room type, along with over 5 million historical reviews.
+These datasets are manually separated by city and sourced from the 'listings.csv' file located in the 'raw' sub-folder.
 
 ## What's in the repo
 
 Brief overview of what you can find in the repo...
 
--   "data/": contains all data for this project
--   "plots/": contains all figures and plots used in reports and memos
+### Sub-folders/directories
 
-### R scripts
+-   ['raw'](data/raw): contains raw data directly sourced from [Maven Analytics](https://www.mavenanalytics.io/data-playground)
 
--   "0a_data_collection.R": scratch paper for data collection work
--   "0b_data_cleaning.R": scratch paper for data cleaning work
--   "1_bivariate_analysis.R": scratch paper for bivariate analysis
--   "2_multivariate_analysis.R": scratch paper for multivariate analysis
+### CSVs
 
-### Reports
-
--   "kim_hailee_final_report.qmd": file for creating final report
--   "kim_hailee_final_report.html": rendered html version of final report
--   "kim_hailee_progress_memo_1.qmd": file for creating progress memo 1
--   "kim_hailee_progress_memo_1.html": rendered html version of progress memo 1
--   "kim_hailee_progress_memo_2.qmd": file for creating progress memo 2
--   "kim_hailee_progress_memo_2.html": rendered html version of progress memo 2
+-   'bangkok.csv': Airbnb data for 19361 listings in Bangkok
+-   'cape_town.csv': Airbnb data for 19086 listings in Cape Town
+-   'hong_kong.csv': Airbnb data for 7087 listings in Hong Kong
+-   'istanbul.csv': Airbnb data for 24519 listings in Istanbul
+-   'mexico_city.csv': Airbnb data for 20065 listings in Mexico City
+-   'new_york.csv': Airbnb data for 37012 listings in New York
+-   'paris.csv': Airbnb data for 64690 listings in Paris
+-   'rio_de_janeiro.csv': Airbnb data for 26615 listings in Rio de Janeiro
+-   'rome.csv': Airbnb data for 27647 listings in Rome
+-   'sydney.csv': Airbnb data for 33630 listings in Sydney

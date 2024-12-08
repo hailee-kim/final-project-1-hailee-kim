@@ -49,4 +49,4 @@ po/*~
 rsconnect/
 
 # data ignore
-data/listings.csv
+data/raw/listings.csv
