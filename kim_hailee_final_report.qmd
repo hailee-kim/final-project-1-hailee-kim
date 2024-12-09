@@ -72,8 +72,9 @@ In terms of analysis, I opted to compare prices within the same city to maintain
 
 ## Univariate Analysis
 
-Price, Countries
-There were only 6 distict countries that this dataset listings were including.
+![Paris has the highest number of listings at 64,690, followed by New York with 37,012, and Sydney with 33,630](plots/price.png){#fig-price}
+
+As shown in @fig-price, the univariate analysis of the city variable shows that there are 10 distinct cities listed in the dataset. Paris, New York, and Sydney emerged as the top three cities with the highest number of listings, collectively representing a significant portion of the total data. Given the overall dataset encompasses 279,712 listings, with these three cities alone accounting for 135,332 listings, a strategic decision was made to focus my analysis on these locations. 
 
 
 ## Bivariate Analysis

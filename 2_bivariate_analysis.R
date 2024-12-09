@@ -47,7 +47,7 @@ paris |>
   theme_minimal()
 
 ggsave(
-  filename = str_glue("plots/price-dist-paris.png"),
+  filename = "plots/price-dist-paris.png",
   width = 8,
   height = 6,
   dpi = 300
@@ -63,7 +63,7 @@ new_york |>
   theme_minimal()
 
 ggsave(
-  filename = str_glue("plots/price-dist-new-york.png"),
+  filename = "plots/price-dist-new-york.png",
   width = 8,
   height = 6,
   dpi = 300
@@ -79,7 +79,7 @@ sydney |>
   theme_minimal()
 
 ggsave(
-  filename = str_glue("plots/price-dist-sydney.png"),
+  filename = "plots/price-dist-sydney.png",
   width = 8,
   height = 6,
   dpi = 300
@@ -104,7 +104,7 @@ combined_data |>
   scale_fill_manual(values = c("Paris" = "navy", "New York" = "turquoise", "Sydney" = "tomato"))
 
 ggsave(
-  filename = str_glue("plots/price-combined.png"),
+  filename = "plots/price-combined.png",
   width = 8,
   height = 6,
   dpi = 300
