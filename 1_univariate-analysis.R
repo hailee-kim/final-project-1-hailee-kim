@@ -25,6 +25,7 @@ paris |>
   ggplot(aes(x = price)) +
   geom_histogram(binwidth = 0.1, fill = "navy", color = "white") +
   scale_x_log10() +
+  coord_cartesian(xlim = c(10, 4000)) + 
   labs(title = "Price Distribution in Paris", x = "Log(Price)", y = "Frequency") +
   theme_minimal()
 
@@ -41,6 +42,7 @@ new_york |>
   ggplot(aes(x = price)) +
   geom_histogram(binwidth = 0.1, fill = "turquoise", color = "white") +
   scale_x_log10() +
+  coord_cartesian(xlim = c(10, 4000)) + 
   labs(title = "Price Distribution in New York", x = "Log(Price)", y = "Frequency") +
   theme_minimal()
 
@@ -57,6 +59,7 @@ sydney |>
   ggplot(aes(x = price)) +
   geom_histogram(binwidth = 0.1, fill = "tomato", color = "white") +
   scale_x_log10() +
+  coord_cartesian(xlim = c(10, 4000)) + 
   labs(title = "Price Distribution in Sydney", x = "Log(Price)", y = "Frequency") +
   theme_minimal()
 

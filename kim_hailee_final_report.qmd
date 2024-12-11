@@ -1,5 +1,5 @@
 ---
-title: "Airbnb ```` "
+title: "Comparative Analysis of Airbnb Price Distributions in Paris, New York, and Sydney"
 subtitle: |
   | Final Project 
   | Data Science 1 with R (STAT 301-1)
@@ -82,17 +82,17 @@ As shown in @fig-price, the univariate analysis of the city variable shows that 
 
 ### Paris
 
-![Caption](plots/price-dist-paris.png){#fig-paris}
+![Log-transformed price distribution in Paris, with the majority of values centered around the 10-100 range](plots/price-dist-paris.png){#fig-paris}
 
 ### New York
 
-![Caption](plots/price-dist-new-york.png){#fig-ny}
+![Log-transformed price distribution in New York, showcasing a broader spread with a peak near 100](plots/price-dist-new-york.png){#fig-ny}
 
 ### Sydney
 
-![Caption](plots/price-dist-sydney.png){#fig-sydney}
+![Log-transformed price distribution in Sydney, indicating a moderate spread with prices concentrated near 100](plots/price-dist-sydney.png){#fig-sydney}
 
-@fig-paris, @fig-ny, and @fig-sydney show the log-transformed price distributions for selected cities: Paris, New York, and Sydney. As shown in @fig-paris, Paris exhibits a relatively narrow price range, with a median price of **$80** and an interquartile range (IQR) of **$50 to $120**. Most listings fall within the lower price range, with prices exceeding **$1,000** accounting for less than **1%** of the city’s listings. @fig-ny shows that New York’s price distribution is slightly broader, with a median price of **$99** and an IQR of **$65 to $150**, but it also has a notable number of outliers, including properties priced above **$10,000**. Sydney, on the other hand, exhibits the highest median price (**$120**) and the largest IQR (**$80 to $200**) as shown in @fig-sydney. Its maximum price of **$28,613** is significantly higher than the other two cities, indicating a more dispersed pricing structure.
+@fig-paris, @fig-ny, and @fig-sydney show the right-skewed log-transformed price distributions for selected cities: Paris, New York, and Sydney. @fig-paris indicates that in Paris, the distribution is approximately symmetric, with a clear peak around the center, suggesting that most prices are concentrated within a relatively narrow range. New York’s distribution, while also centered, shows a broader spread and a slightly flatter peak, indicating a wider variety of prices and a more diverse market as shown in @fig-ny. In contrast, in @fig-sydney, Sydney’s distribution resembles New York’s in its broader shape but has a slightly lower peak, reflecting a moderate concentration of prices and an even distribution across the range. These shapes highlight the unique pricing dynamics in each city, with Paris displaying a more centralized pattern, while New York and Sydney show greater variability.
 
 ## Bivariate Analysis
 
@@ -114,15 +114,15 @@ top_3_cities |>
   knitr::kable()
 ```
 
-@tbl-1 summarizes mean, median, standard deviation, minimum, and maximum prices for Airbnb listings[^2] across ten cities. The mean price varies widely, with cities like Cape Town (2405.12) and Bangkok (2078.28) exhibiting significantly higher averages compared to cities like New York (142.84) and Paris (113.10). However, the large standard deviations in cities such as Cape Town (6143.19) and Bangkok (6379.79) indicate high variability, likely influenced by luxury listings or extreme outliers. Conversely, cities like Paris (214.43) and New York (275.74) display smaller standard deviations, suggesting more consistent pricing across listings. Median prices, which are less sensitive to outliers, highlight that cities like Paris and New York predominantly cater to budget and mid-range accommodations, with median prices at 80 and 99, respectively.
-
-[^2]: This dataset was sourced from [Maven Analytics](https://www.mavenanalytics.io/data-playground), accessed on November 3rd, 2024.
+@tbl-1 summarizes mean, median, standard deviation, minimum, and maximum prices for Airbnb listings across top 3 cities. Sydney has the highest average price (mean: 222.01) and the largest variability, with a standard deviation of 472.63, indicating a highly diverse pricing landscape. This variability is reflected in the large range between the minimum price (5) and maximum price (28,613), suggesting the presence of both affordable and luxury pricing segments. Paris, in contrast, has a much lower mean price of 113.10 and a smaller standard deviation of 214.43. The relatively small spread suggests a more homogenous pricing structure, where prices are concentrated closer to the median of 80. New York falls in between, with a mean price of 142.84 and a standard deviation of 275.74. Its median price of 99 is slightly higher than Paris, but the broader spread indicates a market with a moderate level of diversity.
 
 ![Visualization of price distributions across cities, highlighting disparities, variability, and the impact of outliers on pricing trends](plots/boxplot.png){#fig-boxplot}
 
-@fig-boxplot plot complements this summary by visually highlighting price disparities and outliers. Cities like Cape Town, Bangkok, and Mexico City show extreme outliers, with maximum prices reaching 300,000 or higher, indicating the presence of high-end luxury properties. These outliers significantly inflate the mean price in these cities, as seen in @tbl-1. On the other hand, cities like Paris, Rome, and New York exhibit compact distributions with fewer visible outliers, reflecting more standardized pricing. Additionally, cities like Rio de Janeiro and Istanbul also show significant variability in prices, but the lower median prices suggest that the majority of listings fall into affordable or mid-range categories.
+@fig-boxplot visually highlights these differences in pricing trends across the three cities. New York exhibits a compact distribution, with the majority of prices tightly grouped near the median, which aligns with the lower standard deviation observed in the summary statistics. This suggests that New York's pricing market may be more stable and predictable. Paris shows a wider distribution, with prices more evenly spread across the range. This reflects the city’s dynamic market, likely influenced by factors such as varying property types and economic diversity. Sydney, on the other hand, displays the broadest distribution, with prices extending across a significantly wider range. The relatively low density around the median price of 120, combined with the wide spread, indicates that Sydney may have more extreme pricing categories, including high-end luxury markets.
 
 ## Multivariate Analysis
+
+To further explore the factors influencing price across New York, Paris, and Sydney, we examine the correlations between price and selected variables: number of accommodations, number of bedrooms, minimum nights, latitude, and longitude. @tbl-2 provides the numerical correlations, while @fig-heatmap visualizes these relationships.
 
 ```{r}
 #| label: tbl-2
@@ -137,16 +137,20 @@ top_3_cities |>
     cor_minimum_nights = cor(minimum_nights, price, use = "complete.obs"),
     cor_latitude = cor(latitude, price, use = "complete.obs"),
     cor_longtitude = cor(longitude, price, use = "complete.obs")
-  )
+  ) |>
+  knitr::kable()
 ```
 
-@tbl-2 provides a detailed overview of the correlations between price and numerical features such as accommodates, bedrooms, and minimum_nights for each city. Accommodates shows a significant positive correlation with price in cities like Cape Town (0.39) and Sydney (0.37), indicating that listings accommodating more guests generally have higher prices in these cities. Bedrooms also demonstrates strong positive correlations with price in Sydney (0.39) and Cape Town (0.36), suggesting that larger properties with more bedrooms command premium pricing in these markets. Minimum_nights exhibits weak correlations with price across all cities, with the highest correlation observed in Sydney (0.03). This suggests that the required minimum stay duration has minimal influence on pricing. Some cities, such as Hong Kong (-0.02) and Rome (-0.005), even show slightly negative correlations for minimum_nights, reinforcing its limited impact on price.
+As shown in @tbl-2, the number of people a property accommodates and the number of bedrooms are positively correlated with price across all three. cities. Sydney exhibits the strongest correlation for both variables, with accommodates at 0.37 and bedrooms at 0.39. This suggests that larger properties command higher prices, particularly in Sydney, where market trends might favor spacious accommodations. New York and Paris show similar, albeit slightly weaker, correlations (accomodates at ~0.27 and bedrooms at ~0.25 and 0.20, respectively). This indicates that while size impacts price, the effect is less pronounced than in Sydney.
+
+The correlation between minimum nights and price is negligible in all cities, with values close to zero. This suggests that the minimum stay requirement has little to no impact on pricing decisions, likely because it’s influenced more by policy or local regulations than market-driven factors. 
+
+Moreover, geographical location exhibits weak correlations with price in all cities. In Sydney, latitude shows a slight positive correlation (0.13), potentially reflecting higher prices in northern or southern areas, while longitude has a near-zero correlation (0.12). In contrast, both latitude and longitude show slight negative correlations in Paris and New York. The negative correlations in these cities suggest that pricing patterns might not align strongly with broad geographical gradients but are instead influenced by finer, neighborhood-specific factors. As such, I decided not to investigate further correlations between location and price through spatial visualization, such as mapping. 
 
 ![Visual representation of the correlation strength between price and selected variables (accommodates, bedrooms, minimum nights, latitude, longitude) across cities](plots/heatmap.png){#fig-heatmap}
 
-Darker shades in the @fig-heatmap signify stronger correlations, such as the relationships between accommodates and bedrooms with price in cities like Sydney and Cape Town, where larger properties consistently command higher prices. Conversely, lighter shades denote weaker correlations, particularly for minimum_nights, which appears to have a negligible influence on pricing across all cities.
+The heatmap in @fig-heatmap highlights the strong correlations between accommodates and bedrooms with price, particularly in Sydney, where property size plays a more critical role in pricing compared to New York and Paris. The consistently light shades for minimum_nights confirm its negligible influence on price across all cities, likely driven by policy rather than market dynamics. Geographical variables (latitude and longitude) show weak correlations overall, with slightly darker tones in Sydney indicating a marginally greater influence of location compared to Paris and New York. This visualization reinforces that property size is the primary driver of price, while location and minimum nights have minimal impact.
 
-Overall, Cape Town and Sydney exhibit the strongest overall correlations between price and both accommodates and bedrooms, indicating that property size and capacity are key determinants of pricing in these cities. Accommodates consistently has the highest correlation with price across most cities, followed by bedrooms, reflecting the importance of property size in determining Airbnb prices. Minimum_nights consistently demonstrates weak correlations across all cities, indicating that its impact on pricing is minimal and possibly influenced by local market regulations or norms.
 
 ## Conclusion
 
