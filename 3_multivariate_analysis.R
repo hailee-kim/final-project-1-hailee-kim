@@ -9,7 +9,8 @@ cor_results <- top_3_cities |>
     cor_minimum_nights = cor(minimum_nights, price, use = "complete.obs"),
     cor_latitude = cor(latitude, price, use = "complete.obs"),
     cor_longtitude = cor(longitude, price, use = "complete.obs")
-  )
+  ) |>
+  knitr::kable()
 print(cor_results)
 
 # Heatmap for All Correlations
