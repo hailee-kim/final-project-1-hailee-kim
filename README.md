@@ -15,8 +15,9 @@ Brief overview of what you can find in the repo...
 
 -   '0a_data_collection.R': scratch paper for data collection work
 -   '0b_data_cleaning.R': scratch paper for data cleaning work
--   '1_bivariate_analysis.R': scratch paper for bivariate analysis
--   '2_multivariate_analysis.R': scratch paper for multivariate analysis
+-   '1_univariate_analysis.R': scratch paper for univariate analysis
+-   '2_bivariate_analysis.R': scratch paper for bivariate analysis
+-   '3_multivariate_analysis.R': scratch paper for multivariate analysis
 
 ### Reports
 
@@ -26,3 +27,5 @@ Brief overview of what you can find in the repo...
 -   'kim_hailee_progress_memo_1.html': rendered html version of progress memo 1
 -   'kim_hailee_progress_memo_2.qmd': file for creating progress memo 2
 -   'kim_hailee_progress_memo_2.html': rendered html version of progress memo 2
+-   'kim_hailee_executive_summary.qmd': file for creating executive summary of final report
+-   'kim_hailee_executive_summary.html': rendered html version of executive summary of final report

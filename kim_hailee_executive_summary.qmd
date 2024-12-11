@@ -1,10 +1,10 @@
 ---
-title: "Final Report"
+title: "Comparative Analysis of Airbnb Price Distributions in Paris, New York, and Sydney"
 subtitle: |
-  | Final Project 
+  | Executive Summary
   | Data Science 1 with R (STAT 301-1)
 author: "Hailee Kim"
-pagetitle: "FR Hailee Kim"
+pagetitle: "ES Hailee Kim"
 date: today 
 
 format:
@@ -32,96 +32,80 @@ citation-location: margin
 
 :::
 
-## Packages & Datasets
 
 ```{r}
-#| label: load-pkgs-data
+#| echo: false 
 
-# Loading package
 library(tidyverse)
+library(purrr)
 
-# Loading data
-listings <- read_csv("data/listings.csv")
-listings_codebook <- read_csv("data/listings_data_dictionary.csv")
+listings <- read_csv("data/raw/listings.csv") |> 
+  mutate(across(where(is.character), as.factor))
+listings_codebook <- read_csv("data/raw/listings_data_dictionary.csv")
+
+bangkok <- read_csv("data/bangkok.csv")
+cape_town <- read_csv("data/cape_town.csv")
+hong_kong <- read_csv("data/hong_kong.csv")
+istanbul <- read_csv("data/istanbul.csv")
+mexico_city <- read_csv("data/mexico_city.csv")
+new_york <- read_csv("data/new_york.csv")
+paris <- read_csv("data/paris.csv")
+rio_de_janeiro <- read_csv("data/rio_de_janeiro.csv")
+rome <- read_csv("data/rome.csv")
+sydney <- read_csv("data/sydney.csv")
+
+top_3_cities <- read_csv("data/top_3_cities.csv")
 ```
 
-## Exploratory Data Analysis and Findings
 
-### Bivariate Analysis
+## Introduction 
+
+This analysis examines Airbnb listing prices across Paris, New York, and Sydney, focusing on distribution patterns and the influence of property characteristics on pricing. This dataset was sourced from [Maven Analytics](https://www.mavenanalytics.io/data-playground), accessed on November 3rd, 2024. 
+
+## Data Overview
+
+The dataset comprises 279,712 listings with 33 variables, including categorical, logical, and numeric data. Key variables such as 'district', 'host_response_time', and 'review data' exhibit significant missing values, necessitating careful handling during analysis. The 'amenities' attribute, initially a list, was transformed into separate binary columns to indicate the presence or absence of each amenity.
+
+## Univariate Analysis
+
+![Paris has the highest number of listings at 64,690, followed by New York with 37,012, and Sydney with 33,630](plots/price.png){#fig-price}
+
+Among the 10 cities represented, Paris, New York, and Sydney account for 48% of listings, with 64,690, 37,012, and 33,630 listings respectively as shown in @fig-price. Price distributions in these cities are right-skewed, where Paris shows a more compact distribution, suggesting standardized pricing, while New York and Sydney exhibit broader distributions, reflecting diverse markets with a wider range of prices.
+
+## Bivariate Analysis
+
 
 ```{r}
 #| label: tbl-1
 #| tbl-cap: "Summary Statistics for Price within Each City"
 #| echo: false 
 
-listings |>
+top_3_cities |>
   group_by(city) |>
-  summarise(
+  summarize(
     mean_price = mean(price, na.rm = TRUE),
     median_price = median(price, na.rm = TRUE),
     sd_price = sd(price, na.rm = TRUE),
     min_price = min(price, na.rm = TRUE),
     max_price = max(price, na.rm = TRUE),
     n = n()
-  ) |>
+  ) |> arrange(desc(n)) |>
   knitr::kable()
 ```
 
-@tbl-1 summarizes mean, median, standard deviation, minimum, and maximum prices for Airbnb listings^[This dataset was sourced from [Maven Analytics](https://www.mavenanalytics.io/data-playground), accessed on November 3rd, 2024.] across ten cities. The mean price varies widely, with cities like Cape Town (2405.12) and Bangkok (2078.28) exhibiting significantly higher averages compared to cities like New York (142.84) and Paris (113.10). However, the large standard deviations in cities such as Cape Town (6143.19) and Bangkok (6379.79) indicate high variability, likely influenced by luxury listings or extreme outliers. Conversely, cities like Paris (214.43) and New York (275.74) display smaller standard deviations, suggesting more consistent pricing across listings. Median prices, which are less sensitive to outliers, highlight that cities like Paris and New York predominantly cater to budget and mid-range accommodations, with median prices at 80 and 99, respectively.
+Summary statistics in @tbl-1 reveal that Sydney has the highest average price (mean: 222.01) and the largest variability (standard deviation: 472.63), indicating a diverse pricing landscape. Paris has a lower mean price (113.10) and smaller variability (standard deviation: 214.43), suggesting a more homogeneous pricing structure. New York's mean price (142.84) and variability (standard deviation: 275.74) position it between Paris and Sydney.
 
-![Visualization of price distributions across cities, highlighting disparities, variability, and the impact of outliers on pricing trends ](plots/boxplot.png){#fig-price-distribution}
+## Multivariate Analysis
 
-@fig-price-distribution plot complements this summary by visually highlighting price disparities and outliers. Cities like Cape Town, Bangkok, and Mexico City show extreme outliers, with maximum prices reaching 300,000 or higher, indicating the presence of high-end luxury properties. These outliers significantly inflate the mean price in these cities, as seen in @tbl-1. On the other hand, cities like Paris, Rome, and New York exhibit compact distributions with fewer visible outliers, reflecting more standardized pricing. Additionally, cities like Rio de Janeiro and Istanbul also show significant variability in prices, but the lower median prices suggest that the majority of listings fall into affordable or mid-range categories.
+![Heatmap of correlations between price and selected variables (accommodates, bedrooms, minimum nights, latitude, longitude) across Sydney, Paris, and New York](plots/heatmap.png){#fig-heatmap}
 
+As shown in @fig-heatmap, Correlations between price and property features indicate that the number of accommodations and bedrooms are positively correlated with price across all three cities, with Sydney showing the strongest correlations. Minimum nights show negligible correlation with price, suggesting limited impact on pricing decisions. Geographical variables (latitude and longitude) exhibit weak correlations with price, indicating that location influences are more neighborhood-specific rather than based on broad geographical trends.
 
-### Multivariate Analysis
+## Conclusion
 
+Property size, as indicated by the number of accommodations and bedrooms, is a significant predictor of price in all three cities, especially in Sydney. Minimum stay requirements and broad geographical location have minimal impact on pricing, suggesting that other factors, such as neighborhood desirability and specific amenities, play more substantial roles. Next steps include:
 
-```{r}
-#| label: tbl-2
-#| tbl-cap: "Correlations Between Price and Selected Variables by City"
-#| echo: false 
+* **Amenity Analysis**: Investigate the correlation between specific amenities and listing prices to identify features that add the most value.
+* **Regression Modeling**: Develop models to understand the combined effect of multiple variables on pricing.
+* **Categorical Variables**: Explore the impact of property type and host status (e.g., superhost) on pricing dynamics.
 
-listings |>
-  group_by(city) |>
-  summarise(
-    cor_accommodates = cor(accommodates, price, use = "complete.obs"),
-    cor_bedrooms = cor(bedrooms, price, use = "complete.obs"),
-    cor_minimum_nights = cor(minimum_nights, price, use = "complete.obs")
-  ) |>
-  knitr::kable()
-```
-
-@tbl-2 provides a detailed overview of the correlations between price and numerical features such as accommodates, bedrooms, and minimum_nights for each city. Accommodates shows a significant positive correlation with price in cities like Cape Town (0.39) and Sydney (0.37), indicating that listings accommodating more guests generally have higher prices in these cities.
-Bedrooms also demonstrates strong positive correlations with price in Sydney (0.39) and Cape Town (0.36), suggesting that larger properties with more bedrooms command premium pricing in these markets. Minimum_nights exhibits weak correlations with price across all cities, with the highest correlation observed in Sydney (0.03). This suggests that the required minimum stay duration has minimal influence on pricing. Some cities, such as Hong Kong (-0.02) and Rome (-0.005), even show slightly negative correlations for minimum_nights, reinforcing its limited impact on price.
-
-
-![Visual representation of the correlation strength between price and selected variables (accommodates, bedrooms, and minimum nights) across cities](plots/correlation-heatmap.png){#fig-heatmap}
-
-Darker shades in the @fig-heatmap signify stronger correlations, such as the relationships between accommodates and bedrooms with price in cities like Sydney and Cape Town, where larger properties consistently command higher prices. Conversely, lighter shades denote weaker correlations, particularly for minimum_nights, which appears to have a negligible influence on pricing across all cities.
-
-Overall, Cape Town and Sydney exhibit the strongest overall correlations between price and both accommodates and bedrooms, indicating that property size and capacity are key determinants of pricing in these cities. Accommodates consistently has the highest correlation with price across most cities, followed by bedrooms, reflecting the importance of property size in determining Airbnb prices. Minimum_nights consistently demonstrates weak correlations across all cities, indicating that its impact on pricing is minimal and possibly influenced by local market regulations or norms.
-
-## Research Questions and Curiosity
-1. Bivariate analysis
-* What is the distribution of Airbnb listing prices in each city, and what patterns can be observed within these distributions?
-* Are there outliers or significant differences in price ranges across cities?
-2. Multivariate analysis
-* How do various features such as the number of guests accommodated, number of bedrooms, and minimum nights correlate with listing prices? 
-* Which features have the strongest relationship with price, and does this relationship vary by city?
-
-## Progress Summary and Self-Assessment
-In this stage of the project, I focused on preparing the dataset for analysis by transforming key variables and addressing challenges related to the data structure. First, I converted multiple columns into factors to enable categorical analysis, including variables such as host_response_time, neighbourhood, district, city, property_type, room_type, and review-related metrics (e.g., review_scores_rating, review_scores_accuracy, and others). This transformation ensures that these variables are appropriately handled in subsequent visualizations and statistical analyses. 
-
-In terms of analysis, I opted to compare prices within the same city to maintain consistency and avoid complications stemming from variations in local currencies. This approach allowed me to conduct meaningful bivariate and multivariate analyses, exploring the relationships between price and variables such as accommodates, bedrooms, and minimum_nights. To enhance the visualization of price distributions, I implemented a for loop to generate individual histograms for each city, which allowed me to observe and compare the unique price distributions across various markets effectively.
-
-Additionally, as part of data tidying, I encountered the limitation that the main dataset (data/listings.csv) was 151.15 MB, exceeding GitHub's file size limit of 100.00 MB. To address this, I decided to ignore this file in version control and focus on processing and analyzing it locally, ensuring efficient handling of the large dataset while maintaining a clean and manageable repository.
-
-I am confident in my progress and fully expect to complete a thorough analysis by the end of the quarter.
-
-## Future Directions
-I experienced a crash in R while attempting to pivot the amenities column, originally stored as a single text field with comma-separated values. My goal was to split these amenities into individual items, clean and standardize their labels, and transform them into separate columns using a pivot operation, where each amenity would be represented as a binary variable (TRUE/FALSE). This approach would enable a more granular analysis of the relationship between amenities and price. To prevent further crashes, I plan to divide the dataset by city, thereby reducing its size and improving runtime efficiency.
-
-For the next stage of the analysis, I plan to focus on the top three cities with the highest number of listings: Paris, New York, and Sydney. Using geospatial data (latitude and longitude), I will create detailed maps for these cities to explore the relationship between location and pricing. This analysis aims to identify which areas within these cities exhibit the highest price tendencies, shedding light on premium neighborhoods that may appeal to travelers seeking luxury accommodations. Additionally, I will investigate the distribution of property_type and room_type across neighborhoods, determining whether certain types of housing (ex. "Entire place" or "Private room") are concentrated in specific locations. By visualizing these patterns, I aim to uncover spatial trends in housing types and their impact on pricing within these cities. 
-
-In addition to geospatial analysis, I plan to incorporate review and amenity data into the current multivariable analysis. Once the amenities list column is properly pivoted, I will explore how customer reviews influence pricing by including review-related variables such as review_scores_rating, review_scores_accuracy, review_scores_cleanliness, review_scores_checkin, review_scores_communication, review_scores_location, and review_scores_value. This step will allow me to determine whether higher review scores correlate with higher prices and to identify which aspects of customer satisfaction (e.g., cleanliness, communication, or location) have the strongest influence on pricing. With the review data already converted to factors, this step is ready for implementation and will add a valuable dimension to the analysis.
