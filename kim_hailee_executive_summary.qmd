@@ -64,7 +64,7 @@ This analysis examines Airbnb listing prices across Paris, New York, and Sydney,
 
 ## Data Overview
 
-The dataset comprises 279,712 listings with 33 variables, including categorical, logical, and numeric data. Key variables such as 'district', 'host_response_time', and 'review data' exhibit significant missing values, necessitating careful handling during analysis. The 'amenities' attribute, initially a list, was transformed into separate binary columns to indicate the presence or absence of each amenity.
+The dataset comprises 279,712 listings with 33 variables, including categorical, logical, and numeric data. Some variables such as district (`district`), estimate of how long the Host takes to respond (`host_response_time`), and rating data (`review_scores_rating`, `review_scores_accuracy`...) exhibit significant missing values, necessitating careful handling during analysis. The amenities variable (`amenities`), the only untidy variable in the dataset, was transformed into separate binary columns to indicate the presence or absence of each amenity.
 
 ## Univariate Analysis
 

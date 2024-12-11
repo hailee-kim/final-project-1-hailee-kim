@@ -60,7 +60,7 @@ I selected the **Airbnb listings dataset** inspired by my recent Thanksgiving tr
 
 * What is the distribution of Airbnb listing prices in each city, and what patterns can be observed within these distributions?
 * Are there outliers or significant differences in price ranges across cities?
-* How do various features such as the number of guests accommodated, number of bedrooms, and minimum nights correlate with listing prices? Which features have the strongest relationship with price, and does this relationship vary by city?
+* How do various features such as the number of guests accommodated, number of bedrooms, and minimum nights per booking correlate with listing prices? Which features have the strongest relationship with price, and does this relationship vary by city?
 
 The dataset was sourced from **Maven Analytics**, a reputable provider of data training and datasets. The datasets were freely available on a resource page titled "Data Playground."[^1] This dataset includes all the necessary information for conducting exploratory data analysis, eliminating the need for merging additional datasets.
 
@@ -68,11 +68,11 @@ The dataset was sourced from **Maven Analytics**, a reputable provider of data t
 
 ## Data Overview & quality
 
-The dataset comprises **279,712 observations** across **33 variables**, including 1 date variable, 9 categorical variables (originally character, converted to factors), 4 logical variables, and 19 numeric variables. Certain variables, such as 'district', 'host_response_time', 'host_response_rate', 'host_acceptance_rate', and review data, exhibit low completeness with a significant proportion of missing values, necessitating careful consideration during analysis.
+The dataset comprises **279,712 observations** across **33 variables**, including 1 date variable, 9 categorical variables (originally character, converted to factors), 4 logical variables, and 19 numeric variables. Certain variables, such as district (`district`), estimate of how long the Host takes to respond (`host_response_time`), and rating data (`review_scores_rating`, `review_scores_accuracy`...), exhibit low completeness with a significant proportion of missing values, necessitating careful consideration during analysis.
 
 The dataset is generally tidy, **except for the amenities attribute**, which contains a list of amenities (e.g., \["Heating", "Kitchen", "Washer", "Wifi", "Long term stays allowed"\]). To address this, I transformed each amenity into a separate binary column to indicate its presence (1) or absence (0) in each listing.
 
-For analysis, prices were compared within the same city to maintain consistency and avoid complications arising from **variations in local currencies**. This approach enables meaningful bivariate and multivariate analyses, focusing on relationships between price and variables such as 'accommodates', 'bedrooms', and 'minimum_nights'.
+For analysis, prices were compared within the same city to maintain consistency and avoid complications arising from **variations in local currencies**. This approach enables meaningful bivariate and multivariate analyses, focusing on relationships between price and variables such as accommodates, bedrooms, and minimum nights per booking.
 
 ## Univariate Analysis
 
